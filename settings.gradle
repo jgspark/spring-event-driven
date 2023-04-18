@@ -1,1 +1,6 @@
+
+
 rootProject.name = 'pushpop'
+
+include 'producer'
+include 'consumer'
