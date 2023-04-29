@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: consumer
+  ## Import Aws Yml File
+  config:
+    import: aws-profile.yml, sqs-queue.yml
