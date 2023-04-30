@@ -1,6 +1,7 @@
 package com.example.producer.dto.request;
 
 import com.example.producer.domain.user.User;
+import com.example.producer.domain.user.UserRegister;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public class UserRegisterRequest {
 
     private String password;
 
-    public User toEntity(){
-        return User.of(email , password);
+    public UserRegister toEntity(){
+        return UserRegister.of(email , password);
     }
 }

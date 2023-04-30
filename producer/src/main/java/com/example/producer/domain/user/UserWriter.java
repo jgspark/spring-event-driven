@@ -12,7 +12,7 @@ public class UserWriter {
     private final UserRepository userRepository;
 
     @Transactional
-    public User register(User user) {
+    public User writer(User user) {
         return userRepository.save(user);
     }
 }
