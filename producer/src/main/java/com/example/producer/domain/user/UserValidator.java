@@ -29,7 +29,7 @@ public class UserValidator {
         }
 
         if (userRepository.existsByEmail(register.getEmail())) {
-            throw new RuntimeException("ready to email");
+            throw new RuntimeException("This is a duplicate email.");
         }
     }
 
