@@ -2,24 +2,68 @@ package com.example.consumer.infra.config.sqs;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
+import io.awspring.cloud.messaging.config.QueueMessageHandlerFactory;
+import io.awspring.cloud.messaging.core.QueueMessagingTemplate;
+import io.awspring.cloud.messaging.listener.QueueMessageHandler;
+import io.awspring.cloud.messaging.listener.SimpleMessageListenerContainer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
+@RequiredArgsConstructor
 public class SqsConfiguration {
 
+    private final Profile profile;
+
+    private final String sqlUrl = "http://localhost:4566";
+
     @Bean
-    public AmazonSQSAsync amazonSQSAws(Profile profile) {
-
-        BasicAWSCredentials basicAWSCredentials =
-                new BasicAWSCredentials(profile.getAccessKeyId(), profile.getSecretAccessKey());
-
-        return AmazonSQSAsyncClientBuilder
-                .standard()
-                .withRegion(profile.getRegion())
-                .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
+    public AmazonSQSAsync amazonSQSAsync() {
+        return AmazonSQSAsyncClientBuilder.standard()
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(sqlUrl, profile.getRegion()))
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(profile.getAccessKeyId(), profile.getSecretAccessKey())))
                 .build();
+    }
+
+    @Bean
+    public QueueMessagingTemplate queueMessagingTemplate() {
+        return new QueueMessagingTemplate(amazonSQSAsync());
+    }
+
+
+    /**
+     * User To Message Bean
+     */
+
+    @Bean
+    public SimpleMessageListenerContainer simpleMessageListenerContainer() {
+        SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
+        simpleMessageListenerContainer.setAmazonSqs(amazonSQSAsync());
+        simpleMessageListenerContainer.setMessageHandler(queueMessageHandler());
+        simpleMessageListenerContainer.setMaxNumberOfMessages(10); // 최대값이 10
+        simpleMessageListenerContainer.setTaskExecutor(threadPoolTaskExecutor());
+        return simpleMessageListenerContainer;
+    }
+
+    @Bean
+    public QueueMessageHandler queueMessageHandler() {
+        QueueMessageHandlerFactory queueMessageHandlerFactory = new QueueMessageHandlerFactory();
+        queueMessageHandlerFactory.setAmazonSqs(amazonSQSAsync());
+        return queueMessageHandlerFactory.createQueueMessageHandler();
+    }
+
+    @Bean
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(50);
+        executor.setMaxPoolSize(50);
+        executor.setThreadNamePrefix("sqs-test-listener-");
+        executor.initialize();
+        return executor;
     }
 }

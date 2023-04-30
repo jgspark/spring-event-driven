@@ -4,3 +4,9 @@ spring:
   ## Import Aws Yml File
   config:
     import: aws-profile.yml, sqs-queue.yml
+
+
+logging.level.org.hibernate.SQL: DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+logging.level.org.springframework: DEBUG
+logging.level.com.example.stock.infra.mapper.rank.RankMapper: DEBUG
