@@ -10,9 +10,13 @@ spring:
     url: jdbc:mysql://localhost:3306/default
     username: default
     password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 
 
 logging.level.org.hibernate.SQL: DEBUG
 logging.level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 logging.level.org.springframework: DEBUG
-logging.level.com.example.stock.infra.mapper.rank.RankMapper: DEBUG
