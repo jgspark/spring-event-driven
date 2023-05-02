@@ -1,5 +1,6 @@
 package com.example.consumer.infra.config.sqs;
 
+import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
 import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class AwsSQSListener {
 
-    @SqsListener(value = "sample-queue1.fifo")
+    @SqsListener(
+            value = "${sqs.queue1.name}",
+            deletionPolicy = SqsMessageDeletionPolicy.ALWAYS
+    )
     public void testSqsListener(String snsMessage) {
         log.info("sqs message : {}", snsMessage);
     }

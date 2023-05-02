@@ -20,6 +20,6 @@ public class SqsMessage {
     }
 
     public String getGroupId() {
-        return "groupId_test";
+        return "groupId_test_" + System.currentTimeMillis();
     }
 }

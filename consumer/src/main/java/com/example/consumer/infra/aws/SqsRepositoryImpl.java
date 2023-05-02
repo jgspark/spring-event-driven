@@ -18,11 +18,15 @@ public class SqsRepositoryImpl implements SqsRepository {
 
         SqsInfo info = message.getSqsInfo();
 
+        String groupId = message.getGroupId();
+
+        String messageStr = message.getMessage() + groupId;
+
         SendMessageRequest sendMessageRequest = new SendMessageRequest()
                 .withQueueUrl(info.getUrl())
-                .withMessageBody(message.getMessage())
+                .withMessageBody(messageStr)
                 .withMessageGroupId(message.getGroupId())
-                .withMessageDeduplicationId(message.getGroupId());
+                .withMessageDeduplicationId(groupId);
 
         amazonSQS.sendMessage(sendMessageRequest);
     }
