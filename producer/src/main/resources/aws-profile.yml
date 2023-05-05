@@ -1,4 +1,4 @@
-aws:
+ㅇaws:
   profile:
     region: us-east-1
     access-key-id: testUser

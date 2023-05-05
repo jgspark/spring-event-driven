@@ -11,12 +11,12 @@ import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
-public class UserValidator implements Validator<UserRegister> {
+public class UserValidator implements Validator<User> {
 
     private final UserRepository userRepository;
 
     @Override
-    public void validation(UserRegister register) {
+    public void validation(User register) {
 
         if (ObjectUtils.isEmpty(register.getEmail())) {
             throw new IllegalArgumentException("Email is Empty");

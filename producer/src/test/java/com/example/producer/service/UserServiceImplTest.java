@@ -3,9 +3,7 @@ package com.example.producer.service;
 import com.example.producer.domain.common.Validator;
 import com.example.producer.domain.common.Writer;
 import com.example.producer.domain.user.User;
-import com.example.producer.domain.user.UserRegister;
 import com.example.producer.dto.request.UserRegisterRequest;
-import com.example.producer.core.event.UserEventPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,14 +26,11 @@ class UserServiceImplTest {
     private Writer<User> userWriter;
 
     @Mock
-    private Validator<UserRegister> userValidator;
-
-    @Mock
-    private UserEventPublisher eventPublisher;
+    private Validator<User> userValidator;
 
     @BeforeEach
     public void init() {
-        userService = new UserServiceImpl(userWriter, userValidator, eventPublisher);
+        userService = new UserServiceImpl(userWriter, userValidator);
     }
 
     /**
@@ -57,7 +50,7 @@ class UserServiceImplTest {
 
             String password = "!234";
 
-            User mock = User.of(email, password, LocalDateTime.now());
+            User mock = User.of(email, password);
 
             UserRegisterRequest userRegisterRequest = new UserRegisterRequest(email, password);
 

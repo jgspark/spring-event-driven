@@ -19,7 +19,7 @@ class UserValidatorTest {
     @Mock
     private UserRepository userRepository;
 
-    private Validator<UserRegister> userValidator;
+    private Validator<User> userValidator;
 
     @BeforeEach
     public void init() {
@@ -33,7 +33,7 @@ class UserValidatorTest {
 
         String password = "1234";
 
-        UserRegister mock = UserRegister.of(email, password);
+        User mock = User.of(email, password);
 
         when(userRepository.existsByEmail(anyString())).thenReturn(Boolean.FALSE);
 
@@ -50,7 +50,7 @@ class UserValidatorTest {
 
         String password = "1234";
 
-        UserRegister mock = UserRegister.of(email, password);
+        User mock = User.of(email, password);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> userValidator.validation(mock));
 
@@ -66,7 +66,7 @@ class UserValidatorTest {
 
         String password = null;
 
-        UserRegister mock = UserRegister.of(email, password);
+        User mock = User.of(email, password);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> userValidator.validation(mock));
 
@@ -82,7 +82,7 @@ class UserValidatorTest {
 
         String password = "1234";
 
-        UserRegister mock = UserRegister.of(email, password);
+        User mock = User.of(email, password);
 
         RuntimeException e = assertThrows(RuntimeException.class, () -> userValidator.validation(mock));
 
@@ -98,7 +98,7 @@ class UserValidatorTest {
 
         String password = "1234";
 
-        UserRegister mock = UserRegister.of(email, password);
+        User mock = User.of(email, password);
 
         when(userRepository.existsByEmail(anyString())).thenReturn(Boolean.TRUE);
 
