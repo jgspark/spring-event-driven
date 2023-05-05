@@ -20,6 +20,9 @@ public class UserRegisterEventListener implements ApplicationListener<UserRegist
     public void onApplicationEvent(UserRegisterEvent event) {
         UserEvent userEvent = UserEvent.of(event.getEventName(), convert(event.getPayload()));
         userEventWriter.write(userEvent);
+        /**
+         * SNS And SQS Add
+         */
     }
 
     private String convert(Object object) {
