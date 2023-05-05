@@ -5,6 +5,7 @@ import com.example.producer.domain.common.Writer;
 import com.example.producer.domain.user.User;
 import com.example.producer.domain.user.UserRegister;
 import com.example.producer.dto.request.UserRegisterRequest;
+import com.example.producer.service.event.CustomSpringEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,19 @@ public class UserServiceImpl implements UserService {
 
     private final Validator<UserRegister> userValidator;
 
+    private final CustomSpringEventPublisher eventPublisher;
+
     @Override
     public User register(UserRegisterRequest request) {
 
-        UserRegister register = request.toEntity();
+        UserRegister userRegister = request.toEntity();
 
-        User entity = register.register(userValidator);
+        User user = userRegister.register(userValidator);
 
-        return userWriter.write(entity);
+        User entity = userWriter.write(user);
+
+        eventPublisher.publishCustomEvent("test...");
+
+        return entity;
     }
 }
