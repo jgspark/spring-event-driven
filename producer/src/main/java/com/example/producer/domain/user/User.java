@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,13 +23,16 @@ public class User {
 
     private String password;
 
-    private User(String email, String password) {
+    private LocalDateTime registrationAt;
+
+    private User(String email, String password, LocalDateTime registrationAt) {
         this.email = email;
         this.password = password;
+        this.registrationAt = registrationAt;
     }
 
-    public static User of(String email, String password) {
-        return new User(email, password);
+    public static User of(String email, String password, LocalDateTime registrationAt) {
+        return new User(email, password, registrationAt);
     }
 }
 
