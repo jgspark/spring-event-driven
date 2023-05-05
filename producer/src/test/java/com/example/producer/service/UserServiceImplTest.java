@@ -1,8 +1,9 @@
 package com.example.producer.service;
 
+import com.example.producer.domain.common.Validator;
+import com.example.producer.domain.common.Writer;
 import com.example.producer.domain.user.User;
-import com.example.producer.domain.user.UserValidator;
-import com.example.producer.domain.user.UserWriter;
+import com.example.producer.domain.user.UserRegister;
 import com.example.producer.dto.request.UserRegisterRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -22,10 +24,10 @@ class UserServiceImplTest {
     private UserService userService;
 
     @Mock
-    private UserWriter userWriter;
+    private Writer<User> userWriter;
 
     @Mock
-    private UserValidator userValidator;
+    private Validator<UserRegister> userValidator;
 
     @BeforeEach
     public void init() {
@@ -55,12 +57,12 @@ class UserServiceImplTest {
 
             doNothing().when(userValidator).validation(any());
 
-            when(userWriter.writer(any())).thenReturn(mock);
+            when(userWriter.write(any())).thenReturn(mock);
 
             User entity = userService.register(userRegisterRequest);
 
             verify(userValidator, times(1)).validation(any());
-            verify(userWriter, times(1)).writer(any());
+            verify(userWriter, times(1)).write(any());
 
             assertEquals(entity, mock);
         }
@@ -85,7 +87,7 @@ class UserServiceImplTest {
 
             verify(userValidator, times(1)).validation(any());
 
-            verify(userWriter, times(0)).writer(any());
+            verify(userWriter, times(0)).write(any());
 
             assertEquals(e.getMessage(), errorMsg);
         }
@@ -104,17 +106,15 @@ class UserServiceImplTest {
 
             doNothing().when(userValidator).validation(any());
 
-            when(userWriter.writer(any())).thenThrow(new RuntimeException(errorMsg));
+            when(userWriter.write(any())).thenThrow(new RuntimeException(errorMsg));
 
             RuntimeException e = assertThrows(RuntimeException.class, () -> userService.register(userRegisterRequest));
 
             verify(userValidator, times(1)).validation(any());
-            verify(userWriter, times(1)).writer(any());
+            verify(userWriter, times(1)).write(any());
 
             assertEquals(e.getMessage(), errorMsg);
         }
-
-
     }
 
 }

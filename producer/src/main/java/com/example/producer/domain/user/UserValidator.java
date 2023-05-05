@@ -1,5 +1,6 @@
 package com.example.producer.domain.user;
 
+import com.example.producer.domain.common.Validator;
 import com.example.producer.infra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,10 +11,11 @@ import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
-public class UserValidator {
+public class UserValidator implements Validator<UserRegister> {
 
     private final UserRepository userRepository;
 
+    @Override
     public void validation(UserRegister register) {
 
         if (ObjectUtils.isEmpty(register.getEmail())) {

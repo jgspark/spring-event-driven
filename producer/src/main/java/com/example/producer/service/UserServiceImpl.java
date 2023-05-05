@@ -1,9 +1,9 @@
 package com.example.producer.service;
 
+import com.example.producer.domain.common.Validator;
+import com.example.producer.domain.common.Writer;
 import com.example.producer.domain.user.User;
 import com.example.producer.domain.user.UserRegister;
-import com.example.producer.domain.user.UserValidator;
-import com.example.producer.domain.user.UserWriter;
 import com.example.producer.dto.request.UserRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserWriter userWriter;
+    private final Writer<User> userWriter;
 
-    private final UserValidator userValidator;
+    private final Validator<UserRegister> userValidator;
 
     @Override
     public User register(UserRegisterRequest request) {
@@ -23,6 +23,6 @@ public class UserServiceImpl implements UserService {
 
         User entity = register.register(userValidator);
 
-        return userWriter.writer(entity);
+        return userWriter.write(entity);
     }
 }

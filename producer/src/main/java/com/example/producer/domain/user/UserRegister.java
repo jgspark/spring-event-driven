@@ -1,5 +1,6 @@
 package com.example.producer.domain.user;
 
+import com.example.producer.domain.common.Validator;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public class UserRegister {
 
     private String password;
 
-    public User register(UserValidator userValidator) {
+    public User register(Validator<UserRegister> userValidator) {
         userValidator.validation(this);
         return User.of(email, password);
     }

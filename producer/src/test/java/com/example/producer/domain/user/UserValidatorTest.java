@@ -1,5 +1,6 @@
 package com.example.producer.domain.user;
 
+import com.example.producer.domain.common.Validator;
 import com.example.producer.infra.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class UserValidatorTest {
     @Mock
     private UserRepository userRepository;
 
-    private UserValidator userValidator;
+    private Validator<UserRegister> userValidator;
 
     @BeforeEach
     public void init() {

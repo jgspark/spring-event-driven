@@ -1,5 +1,5 @@
 sqs:
   queue1:
-    name: sample-queue3.fifo
-    url: http://localhost:4566/000000000000/sample-queue3.fifo
+    name: sample-queue7.fifo
+    url: http://localhost:4566/000000000000/sample-queue7.fifo
     host: http://localhost:4566
