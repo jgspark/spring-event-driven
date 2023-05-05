@@ -27,15 +27,6 @@ public class User extends AbstractAggregateRoot<User> {
     @Column(nullable = false)
     private LocalDateTime registrationAt;
 
-    private User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public static User of(String email, String password) {
-        return new User(email, password);
-    }
-
     @Transient
     public void register(Validator<User> userValidator, LocalDateTime registrationAt) {
         userValidator.validation(this);
@@ -44,6 +35,25 @@ public class User extends AbstractAggregateRoot<User> {
     }
 
     private void setRegistrationAt(LocalDateTime registrationAt) {
+        this.registrationAt = registrationAt;
+    }
+
+    public static User of(String email, String password) {
+        return new User(email, password);
+    }
+
+    public static User of(String email, String password, LocalDateTime registrationAt) {
+        return new User(email, password, registrationAt);
+    }
+
+    private User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    private User(String email, String password, LocalDateTime registrationAt) {
+        this.email = email;
+        this.password = password;
         this.registrationAt = registrationAt;
     }
 }

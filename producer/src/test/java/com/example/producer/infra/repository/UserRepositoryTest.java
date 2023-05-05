@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -32,7 +34,7 @@ class UserRepositoryTest {
 
             String pwd = "1234";
 
-            User mock = User.of(email, pwd);
+            User mock = User.of(email, pwd, LocalDateTime.now());
 
             User entity = userRepository.save(mock);
 
@@ -40,6 +42,7 @@ class UserRepositoryTest {
             assertEquals(entity.getId(), mock.getId());
             assertEquals(entity.getEmail(), mock.getEmail());
             assertEquals(entity.getPassword(), mock.getPassword());
+            assertEquals(entity.getRegistrationAt(), mock.getRegistrationAt());
         }
     }
 
@@ -52,7 +55,7 @@ class UserRepositoryTest {
 
         @BeforeEach
         public void init() {
-            User mock = User.of(email, pwd);
+            User mock = User.of(email, pwd, LocalDateTime.now());
             userRepository.save(mock);
             userRepository.flush();
         }
