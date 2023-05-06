@@ -17,7 +17,7 @@ public class AwsSqsConfiguration {
 
     private final Profile profile;
 
-    @Value("${sqs.queue1.host}")
+    @Value("${sqs.host}")
     private String sqlUrl;
 
     @Bean

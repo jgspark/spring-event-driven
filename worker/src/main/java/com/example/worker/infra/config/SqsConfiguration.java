@@ -13,6 +13,7 @@ import io.awspring.cloud.messaging.core.QueueMessagingTemplate;
 import io.awspring.cloud.messaging.listener.QueueMessageHandler;
 import io.awspring.cloud.messaging.listener.SimpleMessageListenerContainer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -24,7 +25,8 @@ public class SqsConfiguration {
 
     private final Profile profile;
 
-    private final String sqlUrl = "http://localhost:4566";
+    @Value("${sqs.host}")
+    private String sqlUrl;
 
     @Bean
     public AmazonSQSAsync amazonSQSAsync() {
