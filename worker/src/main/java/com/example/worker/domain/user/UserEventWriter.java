@@ -14,7 +14,10 @@ public class UserEventWriter {
 
     @Transactional(propagation = Propagation.NESTED)
     public void end(String name) {
-        UserEvent event = userEventRepository.findByName(name).orElseThrow(() -> new RuntimeException("Not Found User Event is " + name));
+
+        UserEvent event = userEventRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Not Found User Event is " + name));
+
         event.success();
     }
 }

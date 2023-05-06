@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -30,10 +31,7 @@ public class SqsConfiguration {
 
     @Bean
     public AmazonSQSAsync amazonSQSAsync() {
-        return AmazonSQSAsyncClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(sqlUrl, profile.getRegion()))
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(profile.getAccessKeyId(), profile.getSecretAccessKey())))
-                .build();
+        return AmazonSQSAsyncClientBuilder.standard().withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(sqlUrl, profile.getRegion())).withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(profile.getAccessKeyId(), profile.getSecretAccessKey()))).build();
     }
 
     @Bean
@@ -59,15 +57,26 @@ public class SqsConfiguration {
     /**
      * User To Message Bean
      */
+    @Bean
+    public SimpleMessageListenerContainer messageListenerContainer(AmazonSQSAsync amazonSqs, QueueMessageHandler queueMessageHandler) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setAmazonSqs(amazonSqs);
+        container.setMessageHandler(queueMessageHandler);
+        container.setMaxNumberOfMessages(10);
+        container.setTaskExecutor(taskExecutor());
+        // 대기 시간을 60초로 설정
+        container.setWaitTimeOut(10);
+        return container;
+    }
 
     @Bean
-    public SimpleMessageListenerContainer simpleMessageListenerContainer() {
-        SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
-        simpleMessageListenerContainer.setAmazonSqs(amazonSQSAsync());
-        simpleMessageListenerContainer.setMessageHandler(queueMessageHandler());
-        simpleMessageListenerContainer.setMaxNumberOfMessages(10); // 최대값이 10
-        simpleMessageListenerContainer.setTaskExecutor(threadPoolTaskExecutor());
-        return simpleMessageListenerContainer;
+    public ThreadPoolTaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(25);
+        executor.setThreadNamePrefix("sqs-test-listener-");
+        return executor;
     }
 
     @Bean
@@ -75,15 +84,5 @@ public class SqsConfiguration {
         QueueMessageHandlerFactory queueMessageHandlerFactory = new QueueMessageHandlerFactory();
         queueMessageHandlerFactory.setAmazonSqs(amazonSQSAsync());
         return queueMessageHandlerFactory.createQueueMessageHandler();
-    }
-
-    @Bean
-    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(50);
-        executor.setMaxPoolSize(50);
-        executor.setThreadNamePrefix("sqs-test-listener-");
-        executor.initialize();
-        return executor;
     }
 }

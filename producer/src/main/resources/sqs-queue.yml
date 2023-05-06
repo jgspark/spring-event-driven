@@ -2,9 +2,8 @@ sqs:
   host: http://localhost:4566
   # 최신 로그인 Queue
   queue1:
-    name: sample-queue11.fifo
-    url: http://localhost:4566/000000000000/sample-queue11.fifo
+    name: user-visits1.fifo
+    url: http://localhost:4566/000000000000/user-visits1.fifo
   queue2:
     name: send-mail1.fifo
     url: http://localhost:4566/000000000000/send-mail1.fifo
-
