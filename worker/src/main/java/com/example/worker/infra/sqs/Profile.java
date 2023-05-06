@@ -1,4 +1,4 @@
-package com.example.consumer.infra.config.sqs;
+package com.example.worker.infra.sqs;
 
 
 import lombok.Data;

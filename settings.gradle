@@ -1,6 +1,5 @@
-
-
-rootProject.name = 'pushpop'
+rootProject.name = 'eventdriven'
 
 include 'producer'
-include 'consumer'
+include 'worker'
+
