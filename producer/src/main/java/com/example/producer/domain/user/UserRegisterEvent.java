@@ -28,8 +28,8 @@ public class UserRegisterEvent extends ApplicationEvent {
 
     Map<String, Object> getPayload() {
         return Map.of(
-                "userId", getUserId(),
-                "registrationAt", getRegistrationAt()
+                "user_id", getUserId(),
+                "registration_at", getRegistrationAt()
         );
     }
 }
