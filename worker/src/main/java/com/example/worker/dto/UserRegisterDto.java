@@ -35,4 +35,8 @@ public class UserRegisterDto {
     public UserVisits toEntity() {
         return UserVisits.of(userId, registrationAt);
     }
+
+    public String getEventName() {
+        return String.format("REGISTER:%s", userId);
+    }
 }
