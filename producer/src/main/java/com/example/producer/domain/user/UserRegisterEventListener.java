@@ -1,6 +1,9 @@
 package com.example.producer.domain.user;
 
 import com.example.producer.domain.common.Writer;
+import com.example.producer.infra.aws.QueueRepository;
+import com.example.producer.infra.aws.SqsInfo;
+import com.example.producer.infra.aws.SqsMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +19,16 @@ public class UserRegisterEventListener implements ApplicationListener<UserRegist
 
     private final ObjectMapper objectMapper;
 
+    private final QueueRepository queueRepository;
+
+    private final SqsInfo sqsInfo;
+
     @Override
     public void onApplicationEvent(UserRegisterEvent event) {
-        UserEvent userEvent = UserEvent.of(event.getEventName(), convert(event.getPayload()));
+        String message = convert(event.getPayload());
+        UserEvent userEvent = UserEvent.of(event.getEventName(), message);
         userEventWriter.write(userEvent);
-        /**
-         * SNS And SQS Add
-         */
+        queueRepository.send(SqsMessage.of(sqsInfo, message));
     }
 
     private String convert(Object object) {
