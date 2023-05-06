@@ -6,6 +6,8 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.example.worker.infra.sqs.Profile;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.awspring.cloud.core.env.ResourceIdResolver;
 import io.awspring.cloud.messaging.config.QueueMessageHandlerFactory;
 import io.awspring.cloud.messaging.core.QueueMessagingTemplate;
 import io.awspring.cloud.messaging.listener.QueueMessageHandler;
@@ -13,6 +15,7 @@ import io.awspring.cloud.messaging.listener.SimpleMessageListenerContainer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
@@ -33,7 +36,21 @@ public class SqsConfiguration {
 
     @Bean
     public QueueMessagingTemplate queueMessagingTemplate() {
-        return new QueueMessagingTemplate(amazonSQSAsync());
+        return new QueueMessagingTemplate(amazonSQSAsync(), (ResourceIdResolver) null, mappingJackson2MessageConverter(messageConverter()));
+    }
+
+    @Bean
+    public ObjectMapper messageConverter() {
+        return new ObjectMapper().findAndRegisterModules();
+    }
+
+    @Bean
+    public MappingJackson2MessageConverter mappingJackson2MessageConverter(final ObjectMapper objectMapper) {
+        final var jacksonMessageConverter = new MappingJackson2MessageConverter();
+        jacksonMessageConverter.setObjectMapper(objectMapper);
+        jacksonMessageConverter.setSerializedPayloadClass(String.class);
+        jacksonMessageConverter.setStrictContentTypeMatch(false);
+        return jacksonMessageConverter;
     }
 
 

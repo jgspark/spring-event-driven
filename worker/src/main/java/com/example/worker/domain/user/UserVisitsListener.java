@@ -14,17 +14,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserVisitsListener {
 
+    private final UserVisitsWriter userVisitsWriter;
+
     private final ObjectMapper objectMapper;
 
     // 삭제 메세지 정책 수립
     @SqsListener(value = "${sqs.queue1.name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
     public void visitsListener(String message) {
-        log.info("sqs message : {}", message);
-        UserRegisterDto convert = convert(message, UserRegisterDto.class);
-        log.info("convert : {}", convert.toString());
+        UserRegisterDto dto = convert(message, UserRegisterDto.class);
+        UserVisits entity = dto.toEntity();
+        userVisitsWriter.write(entity);
     }
 
-    public <T> T convert(String message, Class<T> type) {
+    <T> T convert(String message, Class<T> type) {
         try {
             return objectMapper.readValue(message, type);
         } catch (JsonProcessingException e) {
