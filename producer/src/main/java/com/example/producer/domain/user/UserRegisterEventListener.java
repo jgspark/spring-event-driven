@@ -1,12 +1,15 @@
 package com.example.producer.domain.user;
 
 import com.example.producer.domain.common.Writer;
-import com.example.producer.infra.aws.QueueRepository;
+import com.example.producer.infra.aws.sns.NotificationRepository;
+import com.example.producer.infra.aws.sns.SnsInfo;
+import com.example.producer.infra.aws.sqs.QueueRepository;
 import com.example.producer.infra.aws.SqsInfo;
-import com.example.producer.infra.aws.SqsMessage;
+import com.example.producer.infra.aws.sqs.SqsMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -19,16 +22,17 @@ public class UserRegisterEventListener implements ApplicationListener<UserRegist
 
     private final ObjectMapper objectMapper;
 
-    private final QueueRepository queueRepository;
+    @Value("${sns.visits.topicArn}")
+    private String topicArn;
 
-    private final SqsInfo sqsInfo;
+    private final NotificationRepository notificationRepository;
 
     @Override
     public void onApplicationEvent(UserRegisterEvent event) {
         String message = convert(event.getPayload());
         UserEvent userEvent = UserEvent.of(event.getEventName(), message);
         userEventWriter.write(userEvent);
-        queueRepository.send(SqsMessage.of(sqsInfo, message));
+        notificationRepository.publish(SnsInfo.of(topicArn, message, event.getEventName()));
     }
 
     private String convert(Object object) {

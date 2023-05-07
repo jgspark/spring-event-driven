@@ -1,5 +1,6 @@
-package com.example.producer.infra.aws;
+package com.example.producer.infra.aws.sqs;
 
+import com.example.producer.infra.aws.SqsInfo;
 import lombok.Getter;
 
 @Getter

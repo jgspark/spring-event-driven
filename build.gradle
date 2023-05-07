@@ -51,6 +51,7 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+        // SQS & SNS
         implementation "io.awspring.cloud:spring-cloud-starter-aws-messaging:${springCloudSqsVersion}"
         implementation "io.awspring.cloud:spring-cloud-aws-dependencies:${springCloudSqsVersion}"
         implementation 'org.springframework:spring-messaging:5.3.24'

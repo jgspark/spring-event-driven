@@ -1,4 +1,4 @@
-package com.example.producer.infra.aws;
+package com.example.producer.infra.aws.sqs;
 
 public interface QueueRepository {
 

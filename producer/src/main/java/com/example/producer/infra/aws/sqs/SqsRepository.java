@@ -1,7 +1,8 @@
-package com.example.producer.infra.aws;
+package com.example.producer.infra.aws.sqs;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
+import com.example.producer.infra.aws.SqsInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

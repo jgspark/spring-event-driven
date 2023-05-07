@@ -3,7 +3,7 @@ spring:
     name: consumer
   ## Import Aws Yml File
   config:
-    import: aws-profile.yml, sqs-queue.yml
+    import: aws-profile.yml, sqs-queue.yml, sns.yml
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

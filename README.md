@@ -51,3 +51,14 @@ awslocal sqs create-queue \
     --attributes \
         FifoQueue=true,ContentBasedDeduplication=true,FifoThroughputLimit=3000,MessageDeduplicationIdAgeLimit=30
 ```
+
+
+```bash
+awslocal sns create-topic --name user-visit-topic.fifo --attributes FifoTopic=true
+```
+
+
+```
+awslocal sns subscribe --topic-arn arn:aws:sns:us-east-1:000000000000:user-visit-topic.fifo \
+--protocol sqs --notification-endpoint arn:aws:sqs:us-east-1:000000000000:user-visits1.fifo
+```

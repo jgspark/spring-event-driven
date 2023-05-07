@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -39,7 +41,8 @@ public class UserVisitsListener {
 
     <T> T convert(String message, Class<T> type) {
         try {
-            return objectMapper.readValue(message, type);
+            Map<String, Object> map = objectMapper.readValue(message, Map.class);
+            return objectMapper.readValue((String) map.get("Message"), type);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
