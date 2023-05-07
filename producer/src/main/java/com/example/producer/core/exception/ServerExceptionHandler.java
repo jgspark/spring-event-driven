@@ -15,8 +15,7 @@ public class ServerExceptionHandler {
     @ExceptionHandler(value = {Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage exception(Exception e) {
-        log.error(e.getMessage());
-        log.debug(e.getMessage(), e);
+        log.error(e.getMessage(), e.getCause(), e);
         return new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.name(), e.getMessage(), LocalDateTime.now());
     }
 }
