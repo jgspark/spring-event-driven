@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class UserWriter implements Writer<User> {
 
     private final UserRepository userRepository;
 
-    @Transactional
     @Override
     public User write(User user) {
         return userRepository.save(user);
