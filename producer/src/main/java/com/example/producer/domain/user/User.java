@@ -5,10 +5,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Getter
 @Entity(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -24,6 +25,7 @@ public class UserRegisterEventListener implements ApplicationListener<UserRegist
 
     private final NotificationRepository notificationRepository;
 
+    @Async
     @Override
     public void onApplicationEvent(UserRegisterEvent event) {
         String message = convert(event.getPayload());
